@@ -121,6 +121,7 @@ app.post('/api/auth/register', async (req, res) => {
           id: user._id,
           username: user.username,
           email: user.email
+        }
       }
     });
   } catch (error) {
@@ -143,7 +144,8 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ 
         success: false, 
         message: 'Email and password are required' 
-    });
+      }); // 添加了右花括号来闭合 JSON 对象
+    } // 添加了右花括号来闭合 if 块
     
     // Find user
     const user = await User.findOne({ email });
@@ -151,7 +153,8 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid email or password' 
-    });
+      }); // 添加了右花括号来闭合 JSON 对象
+    } // 添加了右花括号来闭合 if 块
     
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -159,7 +162,8 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid email or password' 
-    });
+      }); // 添加了右花括号来闭合 JSON 对象
+    } // 添加了右花括号来闭合 if 块
     
     // Generate JWT token
     const token = jwt.sign(
@@ -177,6 +181,7 @@ app.post('/api/auth/login', async (req, res) => {
           id: user._id,
           username: user.username,
           email: user.email
+        }
       }
     });
   } catch (error) {
@@ -260,11 +265,12 @@ app.put('/api/items/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ 
         success: false, 
         message: 'Item not found' 
-    });
+      });
+    }
     
     res.json({
       success: true,
-      message: 'Item updated successfully updated successfully',
+      message: 'Item updated successfully',
       data: item
     });
   } catch (error) {
@@ -289,11 +295,12 @@ app.delete('/api/items/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ 
         success: false, 
         message: 'Item not found' 
-    });
+      });
+    }
     
     res.json({
       success: true,
-      message: 'Item deleted successfully deleted successfully'
+      message: 'Item deleted successfully' // 修正重复的文本
     });
   } catch (error) {
     console.error('Delete item error:', error);
