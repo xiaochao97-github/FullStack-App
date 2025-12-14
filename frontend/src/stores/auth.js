@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
   function clearAuth() {
     token.value = null
     user.value = null
-    localStorage.removeItem('token'))
+    localStorage.removeItem('token')
     delete api.defaults.headers.common['Authorization']
   }
   
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
         throw new Error(response.data.message || 'Login failed')
       }
     } catch (error) {
-      throw error.response?.data?.message || 'Network error during login')
+      throw new Error(error.response?.data?.message || 'Network error during login')
     } finally {
       isLoading.value = false
     }
@@ -54,8 +54,9 @@ export const useAuthStore = defineStore('auth', () => {
         return response.data
       } else {
         throw new Error(response.data.message || 'Registration failed')
+      }
     } catch (error) {
-      throw error.response?.data?.message || 'Network error during registration')
+      throw new Error(error.response?.data?.message || 'Network error during registration')
     } finally {
       isLoading.value = false
     }

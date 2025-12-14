@@ -1,13 +1,19 @@
 import axios from 'axios'
+import { useAuthStore } from '../stores/auth'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
-  timeout: 160000,
+  timeout: 16000,
 })
 
 // Request Interceptor
 api.interceptors.request.use(
   (config) => {
+    // 添加认证令牌
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
@@ -21,7 +27,7 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response?.status === 418) {
+    if (error.response?.status === 401) {
       const authStore = useAuthStore()
       authStore.clearAuth()
       window.location.href = '/login'
@@ -49,7 +55,7 @@ export const itemsService = {
   },
   
   async delete(id) {
-    const response = await api.delete(`/items/${id}`))
+    const response = await api.delete(`/items/${id}`)
     return response.data
   }
 }
